@@ -21,6 +21,9 @@ namespace MP1
 {
     public partial class MP1Form : Form
     {
+        
+        List<String> similarImagesPaths = new List<string>();
+
         public MP1Form()
         {
             InitializeComponent();
@@ -40,22 +43,29 @@ namespace MP1
         {
             OpenFileDialog ofd = new OpenFileDialog();
 
-            Dictionary<Color, float> histogram = new Dictionary<Color, float>();
-            Dictionary<LUVClass, float> hist = new Dictionary<LUVClass, float>();
-            Dictionary<int, float> normalizedHist = new Dictionary<int, float>();
+            Dictionary<Color, float> rgbHistogram = new Dictionary<Color, float>();
+            Dictionary<LUVClass, float> luvHistogram = new Dictionary<LUVClass, float>();
+            Dictionary<int, float> quantizedHistogram = new Dictionary<int, float>();
+            Dictionary<int, float> normalizedHistogram = new Dictionary<int, float>();
 
-            Dictionary<Color, float> currentImgHistogram = new Dictionary<Color, float>();
-            Dictionary<LUVClass, float> currentImgHist = new Dictionary<LUVClass, float>();
-            Dictionary<int, float> currNormalizedHist = new Dictionary<int, float>();
-
+            float[] hist1 = new float[159];
+            float[] hist2 = new float[159];
+            
             // Change directory here
             String dir = @"D:\DLSU-M\Term 1 AY 2016-2017\CSC741M\MP1_files\MP1\images\";
 
             String[] imagePaths = Directory.GetFiles(dir, "*.jpg", SearchOption.AllDirectories);
             List<String> paths = new List<string>(); // list of other images in directory
 
+            int imgDimensions = 0;
+            int currImgDimensions = 0;
+
+            float threshold = 0;
+            float sim = 0;
+            //float simThreshold = 0.24F;
+            float simThreshold = 0.1F;
+
             ComputeHistogram ch = new ComputeHistogram(); // for histogram operations
-            //Quantize q = new Quantize(); 
 
             // .jpg only? same size only? padding
             // Filter file type
@@ -69,16 +79,67 @@ namespace MP1
                 Bitmap img = new Bitmap(imgPath);
                 
                 // Selected image RGB histogram
-                histogram = ch.getRGBValues(img);
-                hist = ch.convertToLuv(histogram); // Convert RGB histogram to LUV histogram
-                normalizedHist = ch.quantizeColors(hist); // Quantize LUV histogram to 159 colors
+                rgbHistogram = ch.getRGBValues(img);
+                imgDimensions = ch.getImgDimensions(img);
+                luvHistogram = ch.convertToLuv(rgbHistogram); // Convert RGB histogram to LUV histogram
+                quantizedHistogram = ch.quantizeColors(luvHistogram, imgDimensions); // Quantize LUV histogram to 159 colors
+
+                float counter = 0;
                 /*
-                foreach (Color key in histogram.Keys)
+                foreach (int x in quantizedHistogram.Keys)
                 {
-                    Debug.WriteLine("Key: " + key + "Number: " + histogram[key]);
+                    //Debug.WriteLine("Color: " + x + " Number: " + quantizedHistogram[x]);
+                    counter += quantizedHistogram[x];
                 }
                 */
+                //Debug.WriteLine(counter);
+                //counter = 0;
+                foreach (int x in quantizedHistogram.Keys)
+                {
+                    normalizedHistogram.Add(x, quantizedHistogram[x] / imgDimensions);
+                    //counter += quantizedHistogram[x] / imgDimensions;
+                }
 
+                //Debug.WriteLine(counter);
+
+                for (int i = 0; i < 159; i++)
+                {
+                    normalizedHistogram.TryGetValue(i, out hist1[i]);
+                }
+
+                // Test 1 image
+                
+                /*
+                String s = @"D:\DLSU-M\Term 1 AY 2016-2017\CSC741M\MP1_files\MP1\images\114.jpg";
+
+                Dictionary<Color, float> currRgbHistogram = new Dictionary<Color, float>();
+                Dictionary<LUVClass, float> currLuvHistogram = new Dictionary<LUVClass, float>();
+                Dictionary<int, float> currQuantizedHistogram = new Dictionary<int, float>();
+                Dictionary<int, float> currNormalizedHistogram = new Dictionary<int, float>();
+                Bitmap currImg = new Bitmap(s);
+                currImgDimensions = ch.getImgDimensions(currImg);
+                currRgbHistogram = ch.getRGBValues(currImg);
+                currLuvHistogram = ch.convertToLuv(currRgbHistogram);
+                currQuantizedHistogram = ch.quantizeColors(currLuvHistogram, currImgDimensions);
+
+                counter = 0;
+
+                foreach (int x in currQuantizedHistogram.Keys)
+                {
+                    currNormalizedHistogram.Add(x, currQuantizedHistogram[x] / currImgDimensions);
+                    //counter += currQuantizedHistogram[x] / currImgDimensions;
+                    //Debug.WriteLine("Color: " + x + " Number: " + currQuantizedHistogram[x]);
+                }
+
+                for (int i = 0; i < 159; i++)
+                {
+                    currNormalizedHistogram.TryGetValue(i, out hist2[i]);
+                }
+                Debug.WriteLine("Similarity: " + ch.computeSimilarity(hist1, hist2, threshold));
+
+                // End test
+                */
+                
                 // Adds all images in directory to List excluding selected image
                 foreach (String s in imagePaths)
                 {
@@ -88,58 +149,69 @@ namespace MP1
                     }
                 }
                 
-                // Current image RGB histogram
-                /*
+                // Loop for currentImg
+                
                 foreach (String s in paths)
                 {
+                    Dictionary<Color, float> currRgbHistogram = new Dictionary<Color, float>();
+                    Dictionary<LUVClass, float> currLuvHistogram = new Dictionary<LUVClass, float>();
+                    Dictionary<int, float> currQuantizedHistogram = new Dictionary<int, float>();
+                    Dictionary<int, float> currNormalizedHistogram = new Dictionary<int, float>();
                     Bitmap currImg = new Bitmap(s);
-                    currentImgHistogram = ch.getRGBValues(currImg);
-                    currentImgHist = ch.convertToLuv(currentImgHistogram);
-                    currNormalizedHist = ch.quantizeColors(currentImgHist);
-                }
-                */
+                    currImgDimensions = ch.getImgDimensions(currImg);
+                    currRgbHistogram = ch.getRGBValues(currImg);
+                    currLuvHistogram = ch.convertToLuv(currRgbHistogram);
+                    currQuantizedHistogram = ch.quantizeColors(currLuvHistogram, currImgDimensions);
 
-                /*
-                float counter = 0;
-                float each2 = 0;
-                foreach (int n in normalizedHist.Keys)
-                {
-                    float each = normalizedHist[n] / imgDimensions;
-                    Debug.WriteLine("Color: " + n + " Number: " + normalizedHist[n]);
-                    counter += normalizedHist[n];
-                    Debug.WriteLine("last: " + counter + " ::: " + each);
-                    each2 += each;
-                    Debug.WriteLine("each2: " + each2);
-                }
-                */
+                    counter = 0;
+                    sim = 0;
 
-                /*
-                foreach (Color key in normHist.Keys)
-                {
-                    Debug.WriteLine(key.ToString() + ": " + normHist[key]);
-                    // Normalize RGB to 0-1
-
-
-                    // Quantize RGB to LUV
-
-                    // Get number of each LUV and compute for normalized Hist
-
-
-                    // NH(Q) threshold
-                    
-                    if (normHist[key] > threshold)
+                    foreach (int x in currQuantizedHistogram.Keys)
                     {
-
+                        currNormalizedHistogram.Add(x, currQuantizedHistogram[x] / currImgDimensions);
                     }
-                    
 
-                    // Get histogram of each image in directory
+                    for (int i = 0; i < 159; i++)
+                    {
+                        currNormalizedHistogram.TryGetValue(i, out hist2[i]);
+                    }
 
+                    sim = ch.computeSimilarity(hist1, hist2, threshold);
+
+                    if (sim > simThreshold)
+                    {
+                        //Debug.WriteLine("Path: " + s + "] || Similarity: " + sim);
+                        similarImagesPaths.Add(s);
+                    }
                 }
-                */
-                
 
-
+                List<int> bottomlist = new List<int>();
+                //counter = 0;
+                int c = 0;
+                foreach (String s in similarImagesPaths)
+                {
+                    Debug.WriteLine(s);
+                    //int topmargin = 40;
+                    PictureBox pc = new PictureBox();
+                    Image imgTest = new Bitmap(s);
+                    pc.Image = imgTest;
+                    pc.Size = imgTest.Size;
+                    //pc.Top = topmargin;
+                    //pc.Left = 200;
+                    if (c == 0)
+                    {
+                        bottomlist.Add(pc.Bottom + 8);
+                        pc.Top = 8;
+                    }
+                        
+                    else
+                    {
+                        bottomlist.Add(pc.Bottom + bottomlist[c - 1] + 8);
+                        pc.Top = bottomlist[c - 1] + 8;
+                    }
+                    c++;
+                    panel1.Controls.Add(pc);
+                }
                 // Dispose old image??
             }
 
@@ -150,6 +222,17 @@ namespace MP1
         {
             Form f = new Form();
             f.ShowDialog();
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+            /*
+            PictureBox pc = new PictureBox();
+            pc.Image = new Bitmap(@"D:\DLSU-M\Term 1 AY 2016-2017\CSC741M\MP1_files\MP1\images\114.jpg");
+            pc.Top = 10;
+            panel1.Controls.Add(pc);
+            */
+            
         }
     }
 }

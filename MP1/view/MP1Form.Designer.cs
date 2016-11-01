@@ -31,10 +31,11 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.colorHistogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.selectedImageBox = new System.Windows.Forms.PictureBox();
-            this.colorHistogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.selectedImageBox)).BeginInit();
             this.SuspendLayout();
@@ -50,7 +51,7 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.openToolStripMenuItem.Text = "Open Image";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -61,6 +62,13 @@
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.optionsToolStripMenuItem.Text = "Options";
+            // 
+            // colorHistogramToolStripMenuItem
+            // 
+            this.colorHistogramToolStripMenuItem.Name = "colorHistogramToolStripMenuItem";
+            this.colorHistogramToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.colorHistogramToolStripMenuItem.Text = "Color Histogram";
+            this.colorHistogramToolStripMenuItem.Click += new System.EventHandler(this.colorHistogramToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -91,18 +99,21 @@
             this.selectedImageBox.TabStop = false;
             this.selectedImageBox.Click += new System.EventHandler(this.selectedImage_Click);
             // 
-            // colorHistogramToolStripMenuItem
+            // panel1
             // 
-            this.colorHistogramToolStripMenuItem.Name = "colorHistogramToolStripMenuItem";
-            this.colorHistogramToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.colorHistogramToolStripMenuItem.Text = "Color Histogram";
-            this.colorHistogramToolStripMenuItem.Click += new System.EventHandler(this.colorHistogramToolStripMenuItem_Click);
+            this.panel1.AutoScroll = true;
+            this.panel1.Location = new System.Drawing.Point(118, 42);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(372, 354);
+            this.panel1.TabIndex = 3;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // MP1Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(502, 408);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.selectedImageBox);
             this.Controls.Add(this.menuStrip1);
             this.Name = "MP1Form";
@@ -125,6 +136,7 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.PictureBox selectedImageBox;
         private System.Windows.Forms.ToolStripMenuItem colorHistogramToolStripMenuItem;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 

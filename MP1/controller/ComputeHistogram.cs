@@ -12,7 +12,7 @@ namespace MP1.controller
 {
     class ComputeHistogram
     {
-        public int returnImgDimensions (Bitmap img) { return img.Width * img.Height; }
+        public int getImgDimensions (Bitmap img) { return img.Width * img.Height; }
 
         public Dictionary<Color, float> getRGBValues(Bitmap img)
         {
@@ -55,7 +55,7 @@ namespace MP1.controller
             return hist;
         }
 
-        public Dictionary<int, float> quantizeColors(Dictionary<LUVClass,float> histogram)
+        public Dictionary<int, float> quantizeColors(Dictionary<LUVClass,float> histogram, int imgDimensions)
         {
             Dictionary<int, float> normalizedHist = new Dictionary<int, float>();
             Quantize q = new Quantize();
@@ -74,6 +74,7 @@ namespace MP1.controller
                 }
                 else
                 {
+                    //normalizedHist.Add(luvIndex, histogram[luv]);
                     normalizedHist.Add(luvIndex, histogram[luv]);
                 }
                 //counter += histogram[luv];
@@ -81,6 +82,37 @@ namespace MP1.controller
             }
 
             return normalizedHist;
+        }
+
+        public float computeSimilarity(float[] hist1, float[] hist2, float threshold)
+        {
+            float sim = 0;
+            float included = 0;
+
+            for (int i = 0; i < 159; i++)
+            {
+                //Debug.WriteLine("Color: " + i + " Value: " + hist1[i] + " || " + hist2[i]);
+
+                if (hist1[i] > threshold && hist1[i] != 0 || hist2[i] != 0)
+                    included++;
+
+            }
+            for (int i = 0; i < 159; i++)
+            {
+                float num = Math.Abs(hist1[i] - hist2[i]); // Numerator
+                float denum = Math.Abs(Math.Max(hist1[i], hist2[i])); // Denominator
+
+                if (num != 0 || denum != 0)
+                {
+
+                    //Debug.WriteLine(num + "/" + denum);
+                    float c = 1 - (num / denum);
+                    sim += c;
+                }
+            }
+
+            sim /= included;
+            return sim;
         }
     }
 }
