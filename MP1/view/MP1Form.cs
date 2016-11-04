@@ -73,13 +73,11 @@ namespace MP1
                 selectedImageBox.Image = new Bitmap(imgPath);
                 Bitmap img = new Bitmap(imgPath);
 
-                /*
                 // Simple CH
-                rgbHistogram = ch.getRGBValues(img);
+                /*
                 imgDimensions = ch.getImgDimensions(img);
-                luvHistogram = ch.convertToLuv(rgbHistogram); // Convert RGB histogram to LUV histogram
-                quantizedHistogram = ch.quantizeColors(luvHistogram, imgDimensions); // Quantize LUV histogram to 159 colors
-                
+                quantizedHistogram = ch.getHistogram(img);
+
                 foreach (int x in quantizedHistogram.Keys)
                 {
                     normalizedHistogram.Add(x, quantizedHistogram[x] / imgDimensions);
@@ -90,14 +88,12 @@ namespace MP1
                     normalizedHistogram.TryGetValue(i, out hist1[i]);
                 }
                 */
-
                 // CH Centering
                 bool center = true;
                 CenteringRefinement cr = new CenteringRefinement(img);
-                rgbHistogram = cr.getRgbHistogram(!center);
-                imgDimensions = cr.getDimensions(!center);
-                luvHistogram = ch.convertToLuv(rgbHistogram); // Convert RGB histogram to LUV histogram
-                quantizedHistogram = ch.quantizeColors(luvHistogram, imgDimensions); // Quantize LUV histogram to 159 colors
+                imgDimensions = cr.getDimensions(center);
+
+                quantizedHistogram = ch.getCRHistogram(img, center);
 
                 foreach (int x in quantizedHistogram.Keys)
                 {
@@ -126,17 +122,22 @@ namespace MP1
                     Dictionary<int, float> currQuantizedHistogram = new Dictionary<int, float>();
                     Dictionary<int, float> currNormalizedHistogram = new Dictionary<int, float>();
                     Bitmap currImg = new Bitmap(s);
+
+                    /*
                     CenteringRefinement cr2 = new CenteringRefinement(currImg);
                     bool cent = true;
 
                     currImgDimensions = cr2.getDimensions(!cent);
                     currRgbHistogram = cr2.getRgbHistogram(!cent);
-
-                    //currImgDimensions = ch.getImgDimensions(currImg);
-                    //currRgbHistogram = ch.getRGBValues(currImg);
+                    */
+                    
+                    currImgDimensions = ch.getImgDimensions(currImg);
+                    /*
+                    currRgbHistogram = ch.getRGBValues(currImg);
                     currLuvHistogram = ch.convertToLuv(currRgbHistogram);
                     currQuantizedHistogram = ch.quantizeColors(currLuvHistogram, currImgDimensions);
-                    
+                    */
+                    currQuantizedHistogram = ch.getHistogram(currImg);
                     sim = 0;
 
                     foreach (int x in currQuantizedHistogram.Keys)
