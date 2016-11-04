@@ -41,7 +41,26 @@ namespace MP1.controller
 
         public double getSimilarity(double[] hist1, double[] hist2)
         {
-            return 0.0;
+            double M = 108;
+            double distance = 0.0;
+            for(int i = 0; i < M; i++)
+            {
+                double uT = 0.0;
+                for(int j = 0; j < M; j++)
+                {
+                    uT += hist1[j] / M;
+                }
+
+                double uQ = 0.0;
+                for (int j = 0; j < M; j++)
+                {
+                    uQ += hist2[j] / M;
+                }
+
+                double val = Math.Abs(hist1[i] - hist2[i]) / Math.Abs(hist1[i] + uT) + Math.Abs(hist2[i] + uQ);
+                distance += val;
+            }
+            return distance;
         }
         private LABClass[,] convertToLab(Bitmap img)
         {

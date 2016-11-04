@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MP1.model;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -66,19 +67,33 @@ namespace MP1.controller
                 }
 
             }
-
+            printDictionary(tempResults);
             return orderedList(tempResults);
         }
 
         public ArrayList perceptualSim(String imgPath)
         {
-            ArrayList result = new ArrayList();
-            Bitmap img = new Bitmap(imgPath);
+            double threshold = 0.2;
+            Dictionary<String, double> tempResults = new Dictionary<string, double>();
+            PerceptualSimilarity ps = new PerceptualSimilarity();
 
             ComputeHistogram ch = new ComputeHistogram();
+            Dictionary<LUVClass, float> luv = ch.convertToLuv(ch.getRGBValues(new Bitmap(imgPath)));
+            Dictionary<int, float> queryHistogram = ch.quantizeColors(luv, 0);
 
+            foreach(String path in fileEntries)
+            {
+                Dictionary<LUVClass, float> luv2 = ch.convertToLuv(ch.getRGBValues(new Bitmap(path)));
+                Dictionary<int, float> dHistogram = ch.quantizeColors(luv, 0);
+                double similarity = ps.getSimilarity(queryHistogram, dHistogram);
+                if(similarity > threshold)
+                {
+                    tempResults[path] = similarity;
+                }
+            }
 
-            return result;
+            printDictionary(tempResults);
+            return orderedList(tempResults);
         }
 
         public ArrayList colorDiffHistogram(String imgPath)
@@ -98,6 +113,7 @@ namespace MP1.controller
                 }
             }
 
+            printDictionary(tempResults);
             return orderedList(tempResults);
             
         }
@@ -110,6 +126,13 @@ namespace MP1.controller
                 result.Add(k.Key);
             }
             return result;
+        }
+        private void printDictionary(Dictionary<String, double> dict)
+        {
+            foreach (KeyValuePair<String, double> k in dict)
+            {
+                Console.WriteLine("path: " + k.Key + ", similarity: " + k.Value);
+            }
         }
     }
 }

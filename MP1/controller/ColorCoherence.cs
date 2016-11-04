@@ -25,7 +25,14 @@ namespace MP1.controller
 
         public double getSimilarity(Dictionary<int, CoherenceUnit> hist1, Dictionary<int, CoherenceUnit> hist2)
         {
-            return 0;
+            double distance = 0.0;
+            foreach(KeyValuePair<int, CoherenceUnit> k in hist1)
+            {
+                double val = Math.Abs(k.Value.aCoherentValue - hist2[k.Key].aCoherentValue)
+                            + Math.Abs(k.Value.bIncoherentValue - hist2[k.Key].bIncoherentValue);
+                distance += val;
+            }
+            return distance;
         }
 
         public Dictionary<int,CoherenceUnit> getColorCoherenceHistogram(Bitmap img)

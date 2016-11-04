@@ -21,6 +21,32 @@ namespace MP1.controller
             createMatrix();
         }
 
+        public double getSimilarity(Dictionary<int, float> hist1, Dictionary<int, float> hist2)
+        {
+            double similarity = 0.0;
+            foreach (KeyValuePair<int, float> nhQ in hist1)
+            {
+                double simExactCol = 0.0;
+                double simPerCol = 0.0;
+                simExactCol = 1 - Math.Abs(nhQ.Value - hist2[nhQ.Key]) / Math.Max(nhQ.Value, hist2[nhQ.Key]);
+                
+                // get simPerCol
+                foreach (KeyValuePair<int, float> nhI in hist1)
+                {
+                    if (similarityMatrix[nhQ.Key, nhI.Key] != 0) // if nhIj is perceptually similar to nhQi
+                    {
+                        double val = (1 - Math.Abs(nhQ.Value - nhI.Value) / Math.Max(nhQ.Value, nhI.Value));
+                        simPerCol += val * similarityMatrix[nhQ.Key, nhI.Key];
+                    }
+                }
+
+                double simCol = simExactCol * (1 + simPerCol);
+                double simColor = simCol * nhQ.Value;
+                similarity += simColor;
+            }
+            return similarity;
+        }
+
         private void initializeMaxDistance()
         {
             int N = 159;
