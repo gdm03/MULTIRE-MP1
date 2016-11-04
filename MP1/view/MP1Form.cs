@@ -38,7 +38,7 @@ namespace MP1
         {
 
         }
-
+        
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -152,6 +152,7 @@ namespace MP1
 
 
                 // Display images
+                /*
                 List<int> bottomlist = new List<int>();
                 int c = 0;
 
@@ -176,7 +177,36 @@ namespace MP1
                     c++;
                     panel1.Controls.Add(pc);
                 }
+                */
                 // Dispose old image??
+            }
+        }
+
+        private void displayImages(List<String> paths)
+        {
+            List<int> bottomlist = new List<int>();
+            int c = 0;
+
+            foreach (String s in similarImagesPaths)
+            {
+                Debug.WriteLine(s);
+                PictureBox pc = new PictureBox();
+                Image imgTest = new Bitmap(s);
+                pc.Image = imgTest;
+                pc.Size = imgTest.Size;
+                if (c == 0)
+                {
+                    bottomlist.Add(pc.Bottom + 8);
+                    pc.Top = 8;
+                }
+
+                else
+                {
+                    bottomlist.Add(pc.Bottom + bottomlist[c - 1] + 8);
+                    pc.Top = bottomlist[c - 1] + 8;
+                }
+                c++;
+                panel1.Controls.Add(pc);
             }
         }
 
@@ -188,12 +218,6 @@ namespace MP1
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
-            /*
-            PictureBox pc = new PictureBox();
-            pc.Image = new Bitmap(@"D:\DLSU-M\Term 1 AY 2016-2017\CSC741M\MP1_files\MP1\images\114.jpg");
-            pc.Top = 10;
-            panel1.Controls.Add(pc);
-            */
             
         }
 
