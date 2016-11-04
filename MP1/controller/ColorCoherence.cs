@@ -74,6 +74,39 @@ namespace MP1.controller
             return matrix;
         }
 
+        private LUVClass[,] blurredMatrix(LUVClass[,] luv)
+        {
+            LUVClass[,] result = new LUVClass[width,height];
+            for(int i = 1; i < width - 1; i+=2)
+            {
+                for(int j = 1; j <  height - 1; j += 2)
+                {
+                    double aveL = 0.0;
+                    double aveU = 0.0;
+                    double aveV = 0.0;
+
+                    aveL +=     luv[i - 1, j - 1].L + luv[i, j - 1].L + luv[i + 1, j - 1].L +
+                                luv[i - 1, j].L + luv[i, j].L + luv[i + 1, j].L +
+                                luv[i - 1, j + 1].L + luv[i, j + 1].L + luv[i + 1, j + 1].L;
+                    aveU += luv[i - 1, j - 1].u + luv[i, j - 1].u + luv[i + 1, j - 1].u +
+                                luv[i - 1, j].u + luv[i, j].u + luv[i + 1, j].u +
+                                luv[i - 1, j + 1].u + luv[i, j + 1].u + luv[i + 1, j + 1].u;
+                    aveV += luv[i - 1, j - 1].v + luv[i, j - 1].v + luv[i + 1, j - 1].v +
+                                luv[i - 1, j].v + luv[i, j].v + luv[i + 1, j].v +
+                                luv[i - 1, j + 1].v + luv[i, j + 1].v + luv[i + 1, j + 1].v;
+
+                    aveL /= 9;
+                    aveU /= 9;
+                    aveV /= 9;
+
+                    LUVClass myLuv = new LUVClass(aveL, aveU, aveV);
+                    result[i - 1, j - 1] =myLuv; result[i, j - 1] =myLuv; result[i + 1, j - 1] =myLuv;
+                    result[i - 1, j] =myLuv; result[i, j] =myLuv; result[i + 1, j] =myLuv;
+                    result[i - 1, j + 1] =myLuv; result[i, j + 1] =myLuv; result[i + 1, j + 1] = myLuv;
+                }
+            }
+            return result;
+        }
         private int coherenceCounter;
         Boolean[,] marked;
         private Dictionary<int, CoherenceUnit> checkCoherence(LUVClass[,] luvMatrix, int width, int height)
@@ -81,7 +114,6 @@ namespace MP1.controller
             Dictionary<int, CoherenceUnit> ccv = new Dictionary<int, CoherenceUnit>();
             Quantize q = new Quantize();
             int T = Convert.ToInt32(width * height * 0.01);
-            Console.WriteLine("T = " + T);
 
             marked = new Boolean[width, height];
             for (int i = 0; i < width; i++)
@@ -101,7 +133,7 @@ namespace MP1.controller
                         float a = 0; float b = 0;
                         int luvIndex = q.IndexOf(luvMatrix[x, y].L, luvMatrix[x, y].u, luvMatrix[x, y].v);
                         checkNeighbors(luvMatrix, luvIndex, x, y);
-
+                        //Console.WriteLine("coherence: " + coherenceCounter);
                         if (coherenceCounter >= T) a += coherenceCounter;
                         else b += coherenceCounter;
 

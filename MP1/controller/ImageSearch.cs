@@ -96,7 +96,7 @@ namespace MP1.controller
             }
 
             printDictionary(tempResults);
-            return orderedList(tempResults);
+            return reversedOrderList(tempResults);
         }
 
         public ArrayList colorDiffHistogram(String imgPath)
@@ -130,11 +130,21 @@ namespace MP1.controller
             }
             return result;
         }
+        private ArrayList reversedOrderList(Dictionary<String, double> tempResults)
+        {
+            ArrayList result = new ArrayList();
+            var ordered = tempResults.OrderByDescending(x => x.Value);
+            foreach (KeyValuePair<String, double> k in ordered)
+            {
+                result.Add(k.Key);
+            }
+            return result;
+        }
         private void printDictionary(Dictionary<String, double> dict)
         {
             //foreach (KeyValuePair<String, double> k in dict)
             //{
-            //    Console.WriteLine("path: " + k.Key + ", similarity: " + k.Value);
+             //   Console.WriteLine("path: " + k.Key + ", similarity: " + k.Value);
             //}
         }
     }
