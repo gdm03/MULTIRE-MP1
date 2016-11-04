@@ -58,7 +58,7 @@ namespace MP1.controller
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            double threshold = 1.5;
+            double threshold = 1;
             Dictionary<String, double> tempResults = new Dictionary<string, double>();
 
             ColorCoherence ccv = new ColorCoherence();
@@ -86,7 +86,7 @@ namespace MP1.controller
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            double threshold = 1;
+            double threshold = 1.5;
             Dictionary<String, double> tempResults = new Dictionary<string, double>();
             PerceptualSimilarity ps = new PerceptualSimilarity();
 
@@ -103,16 +103,19 @@ namespace MP1.controller
 
                 Dictionary<int, float> qHist = new Dictionary<int, float>();
                 Dictionary<int, float> dHist = new Dictionary<int, float>();
-
+                
                 //normalize
                 foreach (KeyValuePair<int, float> k in queryHistogram)
-                    qHist[k.Key] = queryHistogram[k.Key] / img.Width * img.Height;
+                {
+                    qHist[k.Key] = queryHistogram[k.Key] / (img.Width * img.Height);
+                }
 
                 foreach (KeyValuePair<int, float> k in dHistogram)
-                    dHist[k.Key] = dHistogram[k.Key] / dImg.Width * dImg.Height;
+                {
+                    dHist[k.Key] = dHistogram[k.Key] / (dImg.Width * dImg.Height);
+                }
 
-                double similarity = ps.getSimilarity(queryHistogram, dHistogram);
-                //Console.WriteLine("percep sim: " + similarity);
+                double similarity = ps.getSimilarity(qHist, dHist);
                 if(similarity > threshold)
                 {
                     tempResults[path] = similarity;

@@ -34,17 +34,17 @@ namespace MP1.controller
 
                 float nhIi;
                 hist2.TryGetValue(nhQ.Key, out nhIi);
-                simExactCol = 1.0 - Math.Abs(nhQ.Value - nhIi) / Math.Max(nhQ.Value, nhIi);
+                simExactCol = 1.0 - (Math.Abs(nhQ.Value - nhIi) / Math.Max(nhQ.Value, nhIi));
                 // get simPerCol
                 foreach (KeyValuePair<int, float> nhI in hist1)
                 {
-                    //Console.WriteLine("sim("+nhQ.Key+ ","+nhI.Key+ "): " + similarityMatrix[nhQ.Key, nhI.Key]);
                     if (similarityMatrix[nhQ.Key, nhI.Key] != 0) // if nhIj is perceptually similar to nhQi
                     {
-                        double val = (1.0 - Math.Abs(nhQ.Value - nhI.Value) / Math.Max(nhQ.Value, nhI.Value));
-                        simPerCol += val * similarityMatrix[nhQ.Key, nhI.Key];
+                        double val = 1.0 - (Math.Abs(nhQ.Value - nhI.Value) / Math.Max(nhQ.Value, nhI.Value));
+                        simPerCol += (val * similarityMatrix[nhQ.Key, nhI.Key]);
                     }
                 }
+                //Console.WriteLine("spcfinal: " +  (1 + simPerCol));
 
                 double simCol = simExactCol * (1 + simPerCol);
                 double simColor = simCol * nhQ.Value;

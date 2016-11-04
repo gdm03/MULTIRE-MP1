@@ -54,7 +54,8 @@ namespace MP1.controller
         {
             this.width = img.Width;
             this.height = img.Height;
-            LUVClass[,] luv = getLuvMatrix(img);
+            LUVClass[,] luvMatrix = getLuvMatrix(img);
+            LUVClass[,] luv = blurredMatrix(luvMatrix);
             return checkCoherence(luv, img.Width, img.Height);
         }
 
@@ -77,9 +78,10 @@ namespace MP1.controller
         private LUVClass[,] blurredMatrix(LUVClass[,] luv)
         {
             LUVClass[,] result = new LUVClass[width,height];
-            for(int i = 1; i < width - 1; i+=2)
+
+            for(int i = 1; i < width-1; i+=2)
             {
-                for(int j = 1; j <  height - 1; j += 2)
+                for(int j = 1; j <  height-1; j += 2)
                 {
                     double aveL = 0.0;
                     double aveU = 0.0;
@@ -100,17 +102,45 @@ namespace MP1.controller
                     aveV /= 9;
 
                     LUVClass myLuv = new LUVClass(aveL, aveU, aveV);
+                    //Console.WriteLine("ij" + i + "," + j);
                     result[i - 1, j - 1] =myLuv; result[i, j - 1] =myLuv; result[i + 1, j - 1] =myLuv;
                     result[i - 1, j] =myLuv; result[i, j] =myLuv; result[i + 1, j] =myLuv;
                     result[i - 1, j + 1] =myLuv; result[i, j + 1] =myLuv; result[i + 1, j + 1] = myLuv;
                 }
             }
-            return result;
+
+            if (width % 2 == 0)
+            {
+                int hei = height;
+                if (height % 2 == 0) hei -= 1;
+                for (int i = 0; i<hei; i++)
+                {
+                    result[width - 1, i] = result[width - 2, i];
+                }
+                
+                
+            }
+
+            if (height % 2 == 0) {                
+                for(int j = 0; j< width; j++)
+                {
+                    result[j, height - 1] = result[j, height - 2];
+                }
+                if (width % 2 == 0)
+                {
+                    result[width - 1, height - 1] = result[width - 1, height - 2];
+                }
+
+            }
+            //Console.WriteLine(result[125, 83]+ " "+ result[126, 83] + " " + result[127, 83]);
+            //Console.WriteLine(result[125, 84] + " " + result[126, 84] + " " + result[127, 84]);
+            return result; 
         }
         private int coherenceCounter;
         Boolean[,] marked;
         private Dictionary<int, CoherenceUnit> checkCoherence(LUVClass[,] luvMatrix, int width, int height)
         {
+            //Console.WriteLine("wh: " + width + "," + height);
             Dictionary<int, CoherenceUnit> ccv = new Dictionary<int, CoherenceUnit>();
             Quantize q = new Quantize();
             int T = Convert.ToInt32(width * height * 0.01);
@@ -155,7 +185,7 @@ namespace MP1.controller
             //normalize
             Dictionary<int, CoherenceUnit> ccvNorm = new Dictionary<int, CoherenceUnit>();
             int dim = width * height;
-            foreach(KeyValuePair<int,CoherenceUnit> k in ccv)
+            foreach (KeyValuePair<int,CoherenceUnit> k in ccv)
             {
                 CoherenceUnit c = new CoherenceUnit(ccv[k.Key].aCoherentValue / dim, ccv[k.Key].bIncoherentValue / dim);
                 ccvNorm[k.Key] = c;

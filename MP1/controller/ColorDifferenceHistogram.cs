@@ -39,7 +39,7 @@ namespace MP1.controller
             //normalize
             for(int i = 0; i < 108; i++)
             {
-                hist[i] /= 108;
+                hist[i] /= 100;
             }
             return hist;
 
