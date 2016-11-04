@@ -39,10 +39,9 @@ namespace MP1.controller
 
         }
 
-        public Boolean isSimilar(double[] hist1, double[] hist2)
+        public double getSimilarity(double[] hist1, double[] hist2)
         {
-
-            return false;
+            return 0.0;
         }
         private LABClass[,] convertToLab(Bitmap img)
         {

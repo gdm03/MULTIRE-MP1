@@ -11,20 +11,19 @@ namespace MP1.controller
 {
     class ColorCoherence
     {
-        private int connectednessValue;
-        private int neighborhoodDistance;
-        private int nColorBuckets;
-        private float[,] quantizedImage;
+        //private int connectednessValue;
+        //private int neighborhoodDistance;
+        //private int nColorBuckets;
+        //private float[,] quantizedImage;
         private int width;
         private int height;
 
-        public ColorCoherence(int connectedness, int neighboringPixelDistance, int numColors)
+        public ColorCoherence()
         {
-            this.connectednessValue = connectedness;
-            this.neighborhoodDistance = neighboringPixelDistance;
+
         }
 
-        public static double getSimilarity(Dictionary<int, CoherenceUnit> hist1, Dictionary<int, CoherenceUnit> hist2)
+        public double getSimilarity(Dictionary<int, CoherenceUnit> hist1, Dictionary<int, CoherenceUnit> hist2)
         {
             return 0;
         }

@@ -13,10 +13,12 @@ namespace MP1.controller
         public double p = 0.2;
         public double dMax;
         public double tColor;
+        public double[,] similarityMatrix { get; set; }
 
         public PerceptualSimilarity()
         {
             initializeMaxDistance();
+            createMatrix();
         }
 
         private void initializeMaxDistance()
@@ -37,14 +39,10 @@ namespace MP1.controller
             dMax = max;
             tColor = p * dMax;
         }
-        public double[,] createMatrix(Bitmap img)
+        public void createMatrix()
         {
-            //histogram
-            //ComputeHistogram ch = new ComputeHistogram();
-            //Dictionary<LUVClass, float> luv = ch.convertToLuv(ch.getRGBValues(img));
-            //Dictionary<int, float> histogram = ch.quantizeColors(luv, 0);
             int N = 159;
-            double[,] similarityMatrix = new double[N,N];
+            similarityMatrix = new double[N,N];
             Quantize q = new Quantize();
 
             for (int index1 = 0; index1 < N; index1++)
@@ -65,7 +63,7 @@ namespace MP1.controller
                    
                 }
             }
-            return similarityMatrix;
+            //return similarityMatrix;
         }
 
         private double getEuclideanDistance(LUVClass l1, LUVClass l2)
