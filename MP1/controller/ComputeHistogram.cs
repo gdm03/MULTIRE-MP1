@@ -14,6 +14,28 @@ namespace MP1.controller
     {
         public int getImgDimensions (Bitmap img) { return img.Width * img.Height; }
 
+        public Dictionary<int, float> getHistogram(Bitmap img)
+        {
+            Dictionary<int, float> histogram = new Dictionary<int, float>();
+            Dictionary<Color, float> rgbHistogram = new Dictionary<Color, float>();
+            Dictionary<LUVClass, float> luvHistogram = new Dictionary<LUVClass, float>();
+
+            rgbHistogram = getRGBValues(img);
+            int imgDimensions = getImgDimensions(img);
+            luvHistogram = convertToLuv(rgbHistogram); // Convert RGB histogram to LUV histogram
+            histogram = quantizeColors(luvHistogram, imgDimensions);
+
+            return histogram;
+        }
+
+        public Dictionary<int, float> getCRHistogram(Bitmap img, bool isCenter)
+        {
+            CenteringRefinement cr = new CenteringRefinement(img);
+            int imgDimensions = cr.getDimensions(isCenter);
+
+            return quantizeColors(convertToLuv(cr.getRgbHistogram(isCenter)), imgDimensions);
+        }
+
         public Dictionary<Color, float> getRGBValues(Bitmap img)
         {
             Dictionary<Color, float> histogram = new Dictionary<Color, float>();
