@@ -212,5 +212,10 @@ namespace MP1.controller
             //Debug.WriteLine("nHi:" + nHi);
             return (nHi);  // return error - can't find index for thisLuv??
         }
+
+        public LUVClass getLUVfromIndex(int index)
+        {
+            return new LUVClass(LuvIndex[index].L, LuvIndex[index].u, LuvIndex[index].v);
+        }
     }
 }
