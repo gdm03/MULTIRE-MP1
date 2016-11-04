@@ -107,7 +107,7 @@ namespace MP1
             displayImages(cch.returnRelevantImages(img));
         }
 
-        private String directory = @"C:\Users\retxh\Desktop\MP1\images";
+        private String directory = @"C:\Users\retxh\Desktop\MP1\test";
         private void button1_Click_1(object sender, EventArgs e)
         {
             //cdh here
@@ -120,14 +120,14 @@ namespace MP1
         {
             //percep
             ImageSearch imagesearch = new ImageSearch(directory);
-            displayImages(imagesearch.search(currImgPath, ImageSearch.COLOR_DIFF_HISTOGRAM));
+            displayImages(imagesearch.search(currImgPath, ImageSearch.PERCEPTUAL_SIM));
         }
 
         private void colorcoherencebutton_Click(object sender, EventArgs e)
         {
             //colorcoherence
             ImageSearch imagesearch = new ImageSearch(directory);
-            displayImages(imagesearch.search(currImgPath, ImageSearch.COLOR_DIFF_HISTOGRAM));
+            displayImages(imagesearch.search(currImgPath, ImageSearch.COLOR_COHERENCE));
         }
     }
 }

@@ -53,6 +53,7 @@ namespace MP1.controller
         }
         public List<String> colorCoherence(String imgPath)
         {
+            Console.WriteLine("doing ccv..");
             double threshold = 1.5;
             Dictionary<String, double> tempResults = new Dictionary<string, double>();
 
@@ -74,6 +75,7 @@ namespace MP1.controller
 
         public List<String> perceptualSim(String imgPath)
         {
+            Console.WriteLine("doing perceptual..");
             double threshold = 1;
             Dictionary<String, double> tempResults = new Dictionary<string, double>();
             PerceptualSimilarity ps = new PerceptualSimilarity();
@@ -82,8 +84,7 @@ namespace MP1.controller
             ComputeHistogram ch = new ComputeHistogram();
             Dictionary<LUVClass, float> luv = ch.convertToLuv(ch.getRGBValues(img));
             Dictionary<int, float> queryHistogram = ch.quantizeColors(luv, 0);
-
-            Console.WriteLine("checking matches...");
+            
             foreach(String path in fileEntries)
             {
                 Bitmap dImg = new Bitmap(path);
@@ -114,6 +115,7 @@ namespace MP1.controller
 
         public List<String> colorDiffHistogram(String imgPath)
         {
+            Console.WriteLine("doing cdh..");
             double threshold = 10;
             ColorDifferenceHistogram cdh = new ColorDifferenceHistogram();
             Dictionary<String, double> tempResults = new Dictionary<string, double>();
