@@ -37,21 +37,65 @@ namespace MP1.controller
             return histogram;
         }
 
+        public Dictionary<Color, float> getRGBValues(Bitmap img, int width_disp, int height_disp, bool center)
+        {
+            Dictionary<Color, float> nonCenterHist = new Dictionary<Color, float>();
+            Dictionary<Color, float> centerHist = new Dictionary<Color, float>();
+
+            
+            for (int i = 0; i < img.Width; i++)
+            {
+                for (int j = 0; j < img.Height; j++)
+                {
+                    if ((i < width_disp || i >= img.Width - width_disp) && (j < height_disp || j >= img.Height - height_disp))
+                    {
+                        Color pixel = img.GetPixel(i, j);
+
+                        if (nonCenterHist.ContainsKey(pixel))
+                        {
+                            nonCenterHist[pixel] = nonCenterHist[pixel] + 1;
+                        }
+                        else
+                        {
+                            nonCenterHist.Add(pixel, 1);
+                        }
+                    }
+
+                    else
+                    {
+                        Color pixel = img.GetPixel(i, j);
+
+                        if (centerHist.ContainsKey(pixel))
+                        {
+                            centerHist[pixel] = centerHist[pixel] + 1;
+                        }
+                        else
+                        {
+                            centerHist.Add(pixel, 1);
+                        }
+                    }
+                }
+            }
+
+            if (!center)
+                return nonCenterHist;
+            else
+                return centerHist;
+        }
+        
+
         public Dictionary<LUVClass, float> convertToLuv(Dictionary<Color,float> histogram)
         {
-            //float counter = 0;
             Dictionary<LUVClass, float> hist = new Dictionary<LUVClass, float>();
 
             foreach (Color key in histogram.Keys)
             {
                 var myRgb = new Rgb { R = key.R, G = key.G, B = key.B };
                 var myLuv = myRgb.To<Luv>();
-
-                //Debug.WriteLine(myLuv.L + " " + myLuv.U + " " + myLuv.V);
+                
                 hist.Add(new LUVClass(myLuv.L, myLuv.U, myLuv.V), histogram[key]);
-                //counter += histogram[key];
             }
-            //Debug.WriteLine("LUV Counter: " + counter);
+
             return hist;
         }
 
@@ -59,26 +103,18 @@ namespace MP1.controller
         {
             Dictionary<int, float> normalizedHist = new Dictionary<int, float>();
             Quantize q = new Quantize();
-
-            //float counter = 0;
-
             foreach (LUVClass luv in histogram.Keys)
             {
-                //Debug.WriteLine(luv.ToString() + " [Key]: " + histogram[luv]);
                 int luvIndex = q.IndexOf(luv.L, luv.u, luv.v);
 
                 if (normalizedHist.ContainsKey(luvIndex))
                 {
-                    //normalizedHist[luvIndex] = normalizedHist[luvIndex] + 1;
                     normalizedHist[luvIndex] = normalizedHist[luvIndex] + histogram[luv];
                 }
                 else
                 {
-                    //normalizedHist.Add(luvIndex, histogram[luv]);
                     normalizedHist.Add(luvIndex, histogram[luv]);
                 }
-                //counter += histogram[luv];
-                //Debug.WriteLine(counter);
             }
 
             return normalizedHist;
@@ -91,12 +127,10 @@ namespace MP1.controller
 
             for (int i = 0; i < 159; i++)
             {
-                //Debug.WriteLine("Color: " + i + " Value: " + hist1[i] + " || " + hist2[i]);
-
                 if (hist1[i] > threshold && hist1[i] != 0 || hist2[i] != 0)
                     included++;
-
             }
+
             for (int i = 0; i < 159; i++)
             {
                 float num = Math.Abs(hist1[i] - hist2[i]); // Numerator
@@ -104,8 +138,6 @@ namespace MP1.controller
 
                 if (num != 0 || denum != 0)
                 {
-
-                    //Debug.WriteLine(num + "/" + denum);
                     float c = 1 - (num / denum);
                     sim += c;
                 }
