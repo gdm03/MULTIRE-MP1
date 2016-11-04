@@ -34,7 +34,7 @@ namespace MP1.controller
             defaultDirectory = defaultDir;
         }
 
-        public ArrayList search(String imgPath, int algo)
+        public List<String> search(String imgPath, int algo)
         {
             switch (algo)
             {
@@ -43,7 +43,7 @@ namespace MP1.controller
                 case 2: return colorDiffHistogram(imgPath);
                 default: break;
             }
-            return new ArrayList();
+            return new List<String>();
         }
 
         public void setDirectory(String dir)
@@ -51,9 +51,9 @@ namespace MP1.controller
             defaultDirectory = dir;
             fileEntries = Directory.GetFiles(defaultDirectory, "*.jpg");
         }
-        public ArrayList colorCoherence(String imgPath)
+        public List<String> colorCoherence(String imgPath)
         {
-            double threshold = 0.2;
+            double threshold = 1.5;
             Dictionary<String, double> tempResults = new Dictionary<string, double>();
 
             ColorCoherence ccv = new ColorCoherence();
@@ -62,17 +62,17 @@ namespace MP1.controller
             {
                 Dictionary<int, CoherenceUnit> dHistogram = ccv.getColorCoherenceHistogram(new Bitmap(path));
                 double distance = ccv.getDistance(queryHistogram, dHistogram);
-                if (distance > threshold)
+                if (distance < threshold)
                 {
                     tempResults[path] = distance;
                 }
 
             }
-            printDictionary(tempResults);
+            //printDictionary(tempResults);
             return orderedList(tempResults);
         }
 
-        public ArrayList perceptualSim(String imgPath)
+        public List<String> perceptualSim(String imgPath)
         {
             double threshold = 1;
             Dictionary<String, double> tempResults = new Dictionary<string, double>();
@@ -108,11 +108,11 @@ namespace MP1.controller
                 }
             }
 
-            printDictionary(tempResults);
+            //printDictionary(tempResults);
             return reversedOrderList(tempResults);
         }
 
-        public ArrayList colorDiffHistogram(String imgPath)
+        public List<String> colorDiffHistogram(String imgPath)
         {
             double threshold = 10;
             ColorDifferenceHistogram cdh = new ColorDifferenceHistogram();
@@ -129,13 +129,13 @@ namespace MP1.controller
                 }
             }
 
-            printDictionary(tempResults);
+            //printDictionary(tempResults);
             return orderedList(tempResults);
             
         }
-        private ArrayList orderedList(Dictionary<String, double> tempResults)
+        private List<String> orderedList(Dictionary<String, double> tempResults)
         {
-            ArrayList result = new ArrayList();
+            List<String> result = new List<String>();
             var ordered = tempResults.OrderBy(x => x.Value);
             foreach (KeyValuePair<String, double> k in ordered)
             {
@@ -143,9 +143,9 @@ namespace MP1.controller
             }
             return result;
         }
-        private ArrayList reversedOrderList(Dictionary<String, double> tempResults)
+        private List<String> reversedOrderList(Dictionary<String, double> tempResults)
         {
-            ArrayList result = new ArrayList();
+            List<String> result = new List<String>();
             var ordered = tempResults.OrderByDescending(x => x.Value);
             foreach (KeyValuePair<String, double> k in ordered)
             {

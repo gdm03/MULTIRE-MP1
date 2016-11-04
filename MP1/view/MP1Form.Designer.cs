@@ -40,6 +40,7 @@
             this.perceptualbutton = new System.Windows.Forms.Button();
             this.colorcoherencebutton = new System.Windows.Forms.Button();
             this.chcenterbutton = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.selectedImageBox)).BeginInit();
             this.SuspendLayout();
@@ -130,6 +131,7 @@
             this.perceptualbutton.TabIndex = 5;
             this.perceptualbutton.Text = "CH with Perceptual Similarity";
             this.perceptualbutton.UseVisualStyleBackColor = true;
+            this.perceptualbutton.Click += new System.EventHandler(this.perceptualbutton_Click);
             // 
             // colorcoherencebutton
             // 
@@ -139,6 +141,7 @@
             this.colorcoherencebutton.TabIndex = 6;
             this.colorcoherencebutton.Text = "Histogram Refinement with Color Coherence";
             this.colorcoherencebutton.UseVisualStyleBackColor = true;
+            this.colorcoherencebutton.Click += new System.EventHandler(this.colorcoherencebutton_Click);
             // 
             // chcenterbutton
             // 
@@ -150,11 +153,22 @@
             this.chcenterbutton.UseVisualStyleBackColor = true;
             this.chcenterbutton.Click += new System.EventHandler(this.chcenterbutton_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(24, 350);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(203, 46);
+            this.button1.TabIndex = 8;
+            this.button1.Text = "Color Difference Histogram";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
             // MP1Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(502, 408);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.chcenterbutton);
             this.Controls.Add(this.colorcoherencebutton);
             this.Controls.Add(this.perceptualbutton);
@@ -187,6 +201,7 @@
         private System.Windows.Forms.Button perceptualbutton;
         private System.Windows.Forms.Button colorcoherencebutton;
         private System.Windows.Forms.Button chcenterbutton;
+        private System.Windows.Forms.Button button1;
     }
 }
 

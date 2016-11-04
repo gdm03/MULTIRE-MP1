@@ -37,17 +37,18 @@ namespace MP1
 
         }
 
+        private String currImgPath;
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
 
             // Change directory here
-            String dir = @"D:\DLSU-M\Term 1 AY 2016-2017\CSC741M\MP1_files\MP1\images\";
+            String dir = @"C:\Users\retxh\Desktop\MP1\images";
             String[] imagePaths = Directory.GetFiles(dir, "*.jpg", SearchOption.AllDirectories);
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 String imgPath = ofd.FileName;
-
+                currImgPath = imgPath;
                 selectedImageBox.Image = new Bitmap(imgPath);
                 Bitmap img = new Bitmap(imgPath);
             }
@@ -104,6 +105,29 @@ namespace MP1
             CenteringCH cch = new CenteringCH();
             Bitmap img = new Bitmap(selectedImageBox.Image);
             displayImages(cch.returnRelevantImages(img));
+        }
+
+        private String directory = @"C:\Users\retxh\Desktop\MP1\images";
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            //cdh here
+            ImageSearch imagesearch = new ImageSearch(directory);
+            displayImages(imagesearch.search(currImgPath, ImageSearch.COLOR_DIFF_HISTOGRAM));
+            
+        }
+
+        private void perceptualbutton_Click(object sender, EventArgs e)
+        {
+            //percep
+            ImageSearch imagesearch = new ImageSearch(directory);
+            displayImages(imagesearch.search(currImgPath, ImageSearch.COLOR_DIFF_HISTOGRAM));
+        }
+
+        private void colorcoherencebutton_Click(object sender, EventArgs e)
+        {
+            //colorcoherence
+            ImageSearch imagesearch = new ImageSearch(directory);
+            displayImages(imagesearch.search(currImgPath, ImageSearch.COLOR_DIFF_HISTOGRAM));
         }
     }
 }
