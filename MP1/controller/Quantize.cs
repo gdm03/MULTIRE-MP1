@@ -215,6 +215,8 @@ namespace MP1.controller
 
         public LUVClass getLUVfromIndex(int index)
         {
+            initLuvIndex();
+            //Console.WriteLine("L sample: " + LuvIndex[index].L);
             return new LUVClass(LuvIndex[index].L, LuvIndex[index].u, LuvIndex[index].v);
         }
     }

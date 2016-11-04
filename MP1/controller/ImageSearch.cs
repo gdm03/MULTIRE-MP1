@@ -13,8 +13,8 @@ using System.Threading.Tasks;
  * Simply call search function (query image, algo number)
  * search function returns an ArrayList of image paths;
  * 
- * ImageSearch is = new ImageSearch();
- * ArrayList imagePaths = is.search("test.jpg", ImageSearch.COLOR_COHERENCE);
+ * ImageSearch i = new ImageSearch();
+ * ArrayList imagePaths = i.search("test.jpg", ImageSearch.COLOR_COHERENCE);
  * */
 
 namespace MP1.controller
@@ -28,9 +28,10 @@ namespace MP1.controller
         private String defaultDirectory = "";
         private String[] fileEntries;
 
-        public ImageSearch()
+        public ImageSearch(String defaultDir)
         {
-            fileEntries = Directory.GetFiles(defaultDirectory, "*.jpg");
+            fileEntries = Directory.GetFiles(defaultDir, "*.jpg");
+            defaultDirectory = defaultDir;
         }
 
         public ArrayList search(String imgPath, int algo)
@@ -81,11 +82,13 @@ namespace MP1.controller
             Dictionary<LUVClass, float> luv = ch.convertToLuv(ch.getRGBValues(new Bitmap(imgPath)));
             Dictionary<int, float> queryHistogram = ch.quantizeColors(luv, 0);
 
+            Console.WriteLine("checking matches...");
             foreach(String path in fileEntries)
             {
                 Dictionary<LUVClass, float> luv2 = ch.convertToLuv(ch.getRGBValues(new Bitmap(path)));
                 Dictionary<int, float> dHistogram = ch.quantizeColors(luv, 0);
                 double similarity = ps.getSimilarity(queryHistogram, dHistogram);
+                Console.WriteLine("percep sim: " + similarity);
                 if(similarity > threshold)
                 {
                     tempResults[path] = similarity;
@@ -120,7 +123,7 @@ namespace MP1.controller
         private ArrayList orderedList(Dictionary<String, double> tempResults)
         {
             ArrayList result = new ArrayList();
-            var ordered = tempResults.OrderByDescending(x => x.Value);
+            var ordered = tempResults.OrderBy(x => x.Value);
             foreach (KeyValuePair<String, double> k in ordered)
             {
                 result.Add(k.Key);
@@ -129,10 +132,10 @@ namespace MP1.controller
         }
         private void printDictionary(Dictionary<String, double> dict)
         {
-            foreach (KeyValuePair<String, double> k in dict)
-            {
-                Console.WriteLine("path: " + k.Key + ", similarity: " + k.Value);
-            }
+            //foreach (KeyValuePair<String, double> k in dict)
+            //{
+            //    Console.WriteLine("path: " + k.Key + ", similarity: " + k.Value);
+            //}
         }
     }
 }

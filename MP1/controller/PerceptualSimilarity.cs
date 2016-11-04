@@ -24,21 +24,30 @@ namespace MP1.controller
         public double getSimilarity(Dictionary<int, float> hist1, Dictionary<int, float> hist2)
         {
             double similarity = 0.0;
+
+            /**effectively discards colors not in query **/
+
             foreach (KeyValuePair<int, float> nhQ in hist1)
             {
                 double simExactCol = 0.0;
                 double simPerCol = 0.0;
-                simExactCol = 1 - Math.Abs(nhQ.Value - hist2[nhQ.Key]) / Math.Max(nhQ.Value, hist2[nhQ.Key]);
-                
+
+                float nhIi;
+                hist2.TryGetValue(nhQ.Key, out nhIi);
+                //Console.WriteLine("nhqi: " + nhQ.Value + ", nhIi: " + nhIi);
+                simExactCol = 1.0 - Math.Abs(nhQ.Value - nhIi) / Math.Max(nhQ.Value, nhIi);
+                //Console.WriteLine("simexactcol: " + simExactCol);
                 // get simPerCol
                 foreach (KeyValuePair<int, float> nhI in hist1)
                 {
+                    //Console.WriteLine("sim("+nhQ.Key+ ","+nhI.Key+ "): " + similarityMatrix[nhQ.Key, nhI.Key]);
                     if (similarityMatrix[nhQ.Key, nhI.Key] != 0) // if nhIj is perceptually similar to nhQi
                     {
-                        double val = (1 - Math.Abs(nhQ.Value - nhI.Value) / Math.Max(nhQ.Value, nhI.Value));
+                        double val = (1.0 - Math.Abs(nhQ.Value - nhI.Value) / Math.Max(nhQ.Value, nhI.Value));
                         simPerCol += val * similarityMatrix[nhQ.Key, nhI.Key];
                     }
                 }
+                Console.WriteLine("simpercol: " + simPerCol);
 
                 double simCol = simExactCol * (1 + simPerCol);
                 double simColor = simCol * nhQ.Value;
@@ -64,6 +73,7 @@ namespace MP1.controller
             }
             dMax = max;
             tColor = p * dMax;
+
         }
         public void createMatrix()
         {
@@ -94,7 +104,8 @@ namespace MP1.controller
 
         private double getEuclideanDistance(LUVClass l1, LUVClass l2)
         {
-            return Math.Sqrt(Math.Pow(l1.L - l2.L, 2) + Math.Pow(l1.u - l2.u, 2) + Math.Pow(l1.v - l2.v, 2));
+            double val = Math.Sqrt(Math.Pow(l1.L - l2.L, 2) + Math.Pow(l1.u - l2.u, 2) + Math.Pow(l1.v - l2.v, 2));
+            return val;
         }
     }
 }
