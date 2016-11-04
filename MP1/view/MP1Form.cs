@@ -63,7 +63,7 @@ namespace MP1
             float threshold = 0;
             float sim = 0;
             //float simThreshold = 0.24F;
-            float simThreshold = 0.1F;
+            float simThreshold = 0.2F;
 
             ComputeHistogram ch = new ComputeHistogram(); // for histogram operations
 
