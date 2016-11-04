@@ -44,6 +44,7 @@ namespace MP1
 
             // Change directory here
             String dir = @"C:\Users\retxh\Desktop\MP1\images";
+            //String dir = @"D:\DLSU-M\Term 1 AY 2016-2017\CSC741M\MP1_files\MP1\images";
             String[] imagePaths = Directory.GetFiles(dir, "*.jpg", SearchOption.AllDirectories);
             if (ofd.ShowDialog() == DialogResult.OK)
             {
@@ -96,20 +97,29 @@ namespace MP1
         private void button1_Click(object sender, EventArgs e)
         {
             NormalCH nch = new NormalCH();
-            Bitmap img = new Bitmap(selectedImageBox.Image);
-            displayImages(nch.returnRelevantImages(img));
+            if (selectedImageBox.Image != null)
+            {
+                Bitmap img = new Bitmap(selectedImageBox.Image);
+                displayImages(nch.returnRelevantImages(img));
+            }
+                
         }
 
         private void chcenterbutton_Click(object sender, EventArgs e)
         {
             CenteringCH cch = new CenteringCH();
-            Bitmap img = new Bitmap(selectedImageBox.Image);
-            displayImages(cch.returnRelevantImages(img));
+            if (selectedImageBox.Image != null)
+            {
+                Bitmap img = new Bitmap(selectedImageBox.Image);
+                displayImages(cch.returnRelevantImages(img));
+            }
+                
         }
 
         /** Change this to appropriate directory
          * */
         private String directory = @"C:\Users\retxh\Desktop\MP1\images";
+        //private String directory = @"D:\DLSU-M\Term 1 AY 2016-2017\CSC741M\MP1_files\MP1\images";
         private void button1_Click_1(object sender, EventArgs e)
         {
             //cdh here
