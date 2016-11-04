@@ -42,9 +42,7 @@ namespace MP1
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-
-            Dictionary<Color, float> rgbHistogram = new Dictionary<Color, float>();
-            Dictionary<LUVClass, float> luvHistogram = new Dictionary<LUVClass, float>();
+            
             Dictionary<int, float> quantizedHistogram = new Dictionary<int, float>();
             Dictionary<int, float> normalizedHistogram = new Dictionary<int, float>();
 
@@ -73,23 +71,14 @@ namespace MP1
                 selectedImageBox.Image = new Bitmap(imgPath);
                 Bitmap img = new Bitmap(imgPath);
 
-                // Simple CH
                 /*
+                // Simple CH
                 imgDimensions = ch.getImgDimensions(img);
                 quantizedHistogram = ch.getHistogram(img);
-
-                foreach (int x in quantizedHistogram.Keys)
-                {
-                    normalizedHistogram.Add(x, quantizedHistogram[x] / imgDimensions);
-                }
-
-                for (int i = 0; i < 159; i++)
-                {
-                    normalizedHistogram.TryGetValue(i, out hist1[i]);
-                }
                 */
+
                 // CH Centering
-                bool center = true;
+                bool center = false;
                 CenteringRefinement cr = new CenteringRefinement(img);
                 imgDimensions = cr.getDimensions(center);
 
@@ -117,27 +106,30 @@ namespace MP1
                 // Loop for currentImg
                 foreach (String s in paths)
                 {
-                    Dictionary<Color, float> currRgbHistogram = new Dictionary<Color, float>();
-                    Dictionary<LUVClass, float> currLuvHistogram = new Dictionary<LUVClass, float>();
                     Dictionary<int, float> currQuantizedHistogram = new Dictionary<int, float>();
                     Dictionary<int, float> currNormalizedHistogram = new Dictionary<int, float>();
                     Bitmap currImg = new Bitmap(s);
-
-                    /*
-                    CenteringRefinement cr2 = new CenteringRefinement(currImg);
-                    bool cent = true;
-
-                    currImgDimensions = cr2.getDimensions(!cent);
-                    currRgbHistogram = cr2.getRgbHistogram(!cent);
-                    */
                     
-                    currImgDimensions = ch.getImgDimensions(currImg);
+                    // CH with Centering Refinement
+                    CenteringRefinement cr2 = new CenteringRefinement(currImg);
+                    bool cent = false;
+
+                    currImgDimensions = cr2.getDimensions(cent);
+                    currQuantizedHistogram = ch.getCRHistogram(img, cent);
                     /*
-                    currRgbHistogram = ch.getRGBValues(currImg);
-                    currLuvHistogram = ch.convertToLuv(currRgbHistogram);
-                    currQuantizedHistogram = ch.quantizeColors(currLuvHistogram, currImgDimensions);
-                    */
+                    // Simple CH
+                    currImgDimensions = ch.getImgDimensions(currImg);
                     currQuantizedHistogram = ch.getHistogram(currImg);
+                    */
+                    /*
+                    
+                    */
+
+                    /*
+                    // Simple CH
+                    currImgDimensions = ch.getImgDimensions(currImg);
+                    currQuantizedHistogram = ch.getHistogram(currImg);
+                    */
                     sim = 0;
 
                     foreach (int x in currQuantizedHistogram.Keys)
@@ -158,6 +150,8 @@ namespace MP1
                     }
                 }
 
+
+                // Display images
                 List<int> bottomlist = new List<int>();
                 int c = 0;
 
@@ -184,8 +178,6 @@ namespace MP1
                 }
                 // Dispose old image??
             }
-
-
         }
 
         private void colorHistogramToolStripMenuItem_Click(object sender, EventArgs e)
@@ -203,6 +195,11 @@ namespace MP1
             panel1.Controls.Add(pc);
             */
             
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
