@@ -62,14 +62,9 @@ namespace MP1
 
             float threshold = 0;
             float sim = 0;
-            //float simThreshold = 0.24F;
             float simThreshold = 0.2F;
 
             ComputeHistogram ch = new ComputeHistogram(); // for histogram operations
-
-            // .jpg only? same size only? padding
-            // Filter file type
-            //ofd.Filter 
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
@@ -77,69 +72,43 @@ namespace MP1
 
                 selectedImageBox.Image = new Bitmap(imgPath);
                 Bitmap img = new Bitmap(imgPath);
-                
-                // Selected image RGB histogram
+
+                /*
+                // Simple CH
                 rgbHistogram = ch.getRGBValues(img);
                 imgDimensions = ch.getImgDimensions(img);
                 luvHistogram = ch.convertToLuv(rgbHistogram); // Convert RGB histogram to LUV histogram
                 quantizedHistogram = ch.quantizeColors(luvHistogram, imgDimensions); // Quantize LUV histogram to 159 colors
-
-                float counter = 0;
-                /*
-                foreach (int x in quantizedHistogram.Keys)
-                {
-                    //Debug.WriteLine("Color: " + x + " Number: " + quantizedHistogram[x]);
-                    counter += quantizedHistogram[x];
-                }
-                */
-                //Debug.WriteLine(counter);
-                //counter = 0;
+                
                 foreach (int x in quantizedHistogram.Keys)
                 {
                     normalizedHistogram.Add(x, quantizedHistogram[x] / imgDimensions);
-                    //counter += quantizedHistogram[x] / imgDimensions;
                 }
 
-                //Debug.WriteLine(counter);
+                for (int i = 0; i < 159; i++)
+                {
+                    normalizedHistogram.TryGetValue(i, out hist1[i]);
+                }
+                */
+
+                // CH Centering
+                bool center = true;
+                CenteringRefinement cr = new CenteringRefinement(img);
+                rgbHistogram = cr.getRgbHistogram(!center);
+                imgDimensions = cr.getDimensions(!center);
+                luvHistogram = ch.convertToLuv(rgbHistogram); // Convert RGB histogram to LUV histogram
+                quantizedHistogram = ch.quantizeColors(luvHistogram, imgDimensions); // Quantize LUV histogram to 159 colors
+
+                foreach (int x in quantizedHistogram.Keys)
+                {
+                    normalizedHistogram.Add(x, quantizedHistogram[x] / imgDimensions);
+                }
 
                 for (int i = 0; i < 159; i++)
                 {
                     normalizedHistogram.TryGetValue(i, out hist1[i]);
                 }
 
-                // Test 1 image
-                
-                /*
-                String s = @"D:\DLSU-M\Term 1 AY 2016-2017\CSC741M\MP1_files\MP1\images\114.jpg";
-
-                Dictionary<Color, float> currRgbHistogram = new Dictionary<Color, float>();
-                Dictionary<LUVClass, float> currLuvHistogram = new Dictionary<LUVClass, float>();
-                Dictionary<int, float> currQuantizedHistogram = new Dictionary<int, float>();
-                Dictionary<int, float> currNormalizedHistogram = new Dictionary<int, float>();
-                Bitmap currImg = new Bitmap(s);
-                currImgDimensions = ch.getImgDimensions(currImg);
-                currRgbHistogram = ch.getRGBValues(currImg);
-                currLuvHistogram = ch.convertToLuv(currRgbHistogram);
-                currQuantizedHistogram = ch.quantizeColors(currLuvHistogram, currImgDimensions);
-
-                counter = 0;
-
-                foreach (int x in currQuantizedHistogram.Keys)
-                {
-                    currNormalizedHistogram.Add(x, currQuantizedHistogram[x] / currImgDimensions);
-                    //counter += currQuantizedHistogram[x] / currImgDimensions;
-                    //Debug.WriteLine("Color: " + x + " Number: " + currQuantizedHistogram[x]);
-                }
-
-                for (int i = 0; i < 159; i++)
-                {
-                    currNormalizedHistogram.TryGetValue(i, out hist2[i]);
-                }
-                Debug.WriteLine("Similarity: " + ch.computeSimilarity(hist1, hist2, threshold));
-
-                // End test
-                */
-                
                 // Adds all images in directory to List excluding selected image
                 foreach (String s in imagePaths)
                 {
@@ -150,7 +119,6 @@ namespace MP1
                 }
                 
                 // Loop for currentImg
-                
                 foreach (String s in paths)
                 {
                     Dictionary<Color, float> currRgbHistogram = new Dictionary<Color, float>();
@@ -158,12 +126,17 @@ namespace MP1
                     Dictionary<int, float> currQuantizedHistogram = new Dictionary<int, float>();
                     Dictionary<int, float> currNormalizedHistogram = new Dictionary<int, float>();
                     Bitmap currImg = new Bitmap(s);
-                    currImgDimensions = ch.getImgDimensions(currImg);
-                    currRgbHistogram = ch.getRGBValues(currImg);
+                    CenteringRefinement cr2 = new CenteringRefinement(currImg);
+                    bool cent = true;
+
+                    currImgDimensions = cr2.getDimensions(!cent);
+                    currRgbHistogram = cr2.getRgbHistogram(!cent);
+
+                    //currImgDimensions = ch.getImgDimensions(currImg);
+                    //currRgbHistogram = ch.getRGBValues(currImg);
                     currLuvHistogram = ch.convertToLuv(currRgbHistogram);
                     currQuantizedHistogram = ch.quantizeColors(currLuvHistogram, currImgDimensions);
-
-                    counter = 0;
+                    
                     sim = 0;
 
                     foreach (int x in currQuantizedHistogram.Keys)
@@ -180,24 +153,20 @@ namespace MP1
 
                     if (sim > simThreshold)
                     {
-                        //Debug.WriteLine("Path: " + s + "] || Similarity: " + sim);
                         similarImagesPaths.Add(s);
                     }
                 }
 
                 List<int> bottomlist = new List<int>();
-                //counter = 0;
                 int c = 0;
+
                 foreach (String s in similarImagesPaths)
                 {
                     Debug.WriteLine(s);
-                    //int topmargin = 40;
                     PictureBox pc = new PictureBox();
                     Image imgTest = new Bitmap(s);
                     pc.Image = imgTest;
                     pc.Size = imgTest.Size;
-                    //pc.Top = topmargin;
-                    //pc.Left = 200;
                     if (c == 0)
                     {
                         bottomlist.Add(pc.Bottom + 8);
