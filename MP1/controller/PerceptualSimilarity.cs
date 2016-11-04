@@ -10,32 +10,60 @@ namespace MP1.controller
 {
     class PerceptualSimilarity
     {
+        public double p = 0.2;
+        public double dMax;
+        public double tColor;
+
         public PerceptualSimilarity()
         {
-
+            initializeMaxDistance();
         }
 
-        public double[,] createMatrix(Bitmap img)
+        private void initializeMaxDistance()
         {
-            //histogram
-            ComputeHistogram ch = new ComputeHistogram();
-            Dictionary<LUVClass, float> luv = ch.convertToLuv(ch.getRGBValues(img));
-            Dictionary<int, float> histogram = ch.quantizeColors(luv, 0);
-            double[,] similarityMatrix = new double[histogram.Count, histogram.Count];
+            int N = 159;
             Quantize q = new Quantize();
-            int i = 0;
-            foreach(int index1 in histogram.Keys)
+            double max = 0;
+            for (int index1 = 0; index1 < N; index1++)
             {
-                int j = 0;
-                foreach(int index2 in histogram.Keys)
+                for (int index2 = 0; index2 < N; index2++)
                 {
                     LUVClass luv1 = q.getLUVfromIndex(index1);
                     LUVClass luv2 = q.getLUVfromIndex(index2);
                     double distance = getEuclideanDistance(luv1, luv2);
-                    similarityMatrix[i, j] = distance;
-                    j++;
+                    if (distance > max) max = distance;
                 }
-                i++;
+            }
+            dMax = max;
+            tColor = p * dMax;
+        }
+        public double[,] createMatrix(Bitmap img)
+        {
+            //histogram
+            //ComputeHistogram ch = new ComputeHistogram();
+            //Dictionary<LUVClass, float> luv = ch.convertToLuv(ch.getRGBValues(img));
+            //Dictionary<int, float> histogram = ch.quantizeColors(luv, 0);
+            int N = 159;
+            double[,] similarityMatrix = new double[N,N];
+            Quantize q = new Quantize();
+
+            for (int index1 = 0; index1 < N; index1++)
+            {
+                for (int index2 = 0; index2 < N; index2++)
+                {
+                    LUVClass luv1 = q.getLUVfromIndex(index1);
+                    LUVClass luv2 = q.getLUVfromIndex(index2);
+                    double distance = getEuclideanDistance(luv1, luv2);
+                    if(distance > tColor)
+                    {
+                        similarityMatrix[index1, index2] = 0;
+                    }
+                    else
+                    {
+                        similarityMatrix[index1, index2] = 1 - distance / tColor;
+                    }
+                   
+                }
             }
             return similarityMatrix;
         }
