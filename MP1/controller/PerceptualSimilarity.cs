@@ -13,10 +13,38 @@ namespace MP1.controller
         public double p = 0.2;
         public double dMax;
         public double tColor;
+        public double[,] similarityMatrix { get; set; }
 
         public PerceptualSimilarity()
         {
             initializeMaxDistance();
+            createMatrix();
+        }
+
+        public double getSimilarity(Dictionary<int, float> hist1, Dictionary<int, float> hist2)
+        {
+            double similarity = 0.0;
+            foreach (KeyValuePair<int, float> nhQ in hist1)
+            {
+                double simExactCol = 0.0;
+                double simPerCol = 0.0;
+                simExactCol = 1 - Math.Abs(nhQ.Value - hist2[nhQ.Key]) / Math.Max(nhQ.Value, hist2[nhQ.Key]);
+                
+                // get simPerCol
+                foreach (KeyValuePair<int, float> nhI in hist1)
+                {
+                    if (similarityMatrix[nhQ.Key, nhI.Key] != 0) // if nhIj is perceptually similar to nhQi
+                    {
+                        double val = (1 - Math.Abs(nhQ.Value - nhI.Value) / Math.Max(nhQ.Value, nhI.Value));
+                        simPerCol += val * similarityMatrix[nhQ.Key, nhI.Key];
+                    }
+                }
+
+                double simCol = simExactCol * (1 + simPerCol);
+                double simColor = simCol * nhQ.Value;
+                similarity += simColor;
+            }
+            return similarity;
         }
 
         private void initializeMaxDistance()
@@ -37,14 +65,10 @@ namespace MP1.controller
             dMax = max;
             tColor = p * dMax;
         }
-        public double[,] createMatrix(Bitmap img)
+        public void createMatrix()
         {
-            //histogram
-            //ComputeHistogram ch = new ComputeHistogram();
-            //Dictionary<LUVClass, float> luv = ch.convertToLuv(ch.getRGBValues(img));
-            //Dictionary<int, float> histogram = ch.quantizeColors(luv, 0);
             int N = 159;
-            double[,] similarityMatrix = new double[N,N];
+            similarityMatrix = new double[N,N];
             Quantize q = new Quantize();
 
             for (int index1 = 0; index1 < N; index1++)
@@ -65,7 +89,7 @@ namespace MP1.controller
                    
                 }
             }
-            return similarityMatrix;
+            //return similarityMatrix;
         }
 
         private double getEuclideanDistance(LUVClass l1, LUVClass l2)
