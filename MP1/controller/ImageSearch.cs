@@ -7,6 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+/**
+ * Use (only) this class to use the algorithms
+ * Simply call search function (query image, algo number)
+ * search function returns an ArrayList of image paths;
+ * 
+ * ImageSearch is = new ImageSearch();
+ * ArrayList imagePaths = is.search("test.jpg", ImageSearch.COLOR_COHERENCE);
+ * */
+
 namespace MP1.controller
 {
     class ImageSearch
@@ -75,7 +84,6 @@ namespace MP1.controller
         public ArrayList colorDiffHistogram(String imgPath)
         {
             double threshold = 0.2;
-            //ArrayList result = new ArrayList();
             ColorDifferenceHistogram cdh = new ColorDifferenceHistogram();
             Dictionary<String, double> tempResults = new Dictionary<string, double>();
 
