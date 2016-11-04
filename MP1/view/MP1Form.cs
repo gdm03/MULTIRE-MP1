@@ -58,7 +58,7 @@ namespace MP1
         {
             List<int> bottomlist = new List<int>();
             int c = 0;
-
+            panel1.Controls.Clear();
             foreach (String s in paths)
             {
                 //Debug.WriteLine(s);
@@ -107,7 +107,9 @@ namespace MP1
             displayImages(cch.returnRelevantImages(img));
         }
 
-        private String directory = @"C:\Users\retxh\Desktop\MP1\test";
+        /** Change this to appropriate directory
+         * */
+        private String directory = @"C:\Users\retxh\Desktop\MP1\images";
         private void button1_Click_1(object sender, EventArgs e)
         {
             //cdh here
