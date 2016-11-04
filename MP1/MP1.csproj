@@ -50,7 +50,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="controller\ColorCoherence.cs" />
+    <Compile Include="controller\ColorDifferenceHistogram.cs" />
     <Compile Include="controller\ComputeHistogram.cs" />
+    <Compile Include="controller\PerceptualSimilarity.cs" />
     <Compile Include="controller\Quantize.cs" />
     <Compile Include="model\LUVClass.cs" />
     <Compile Include="view\MP1Form.cs">
