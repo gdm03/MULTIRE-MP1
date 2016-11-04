@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -54,6 +55,9 @@ namespace MP1.controller
         public List<String> colorCoherence(String imgPath)
         {
             Console.WriteLine("doing ccv..");
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             double threshold = 1.5;
             Dictionary<String, double> tempResults = new Dictionary<string, double>();
 
@@ -69,6 +73,8 @@ namespace MP1.controller
                 }
 
             }
+            stopwatch.Stop();
+            Console.WriteLine("Done! Time: " + stopwatch.ElapsedMilliseconds);
             //printDictionary(tempResults);
             return orderedList(tempResults);
         }
@@ -76,6 +82,10 @@ namespace MP1.controller
         public List<String> perceptualSim(String imgPath)
         {
             Console.WriteLine("doing perceptual..");
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             double threshold = 1;
             Dictionary<String, double> tempResults = new Dictionary<string, double>();
             PerceptualSimilarity ps = new PerceptualSimilarity();
@@ -109,6 +119,8 @@ namespace MP1.controller
                 }
             }
 
+            stopwatch.Stop();
+            Console.WriteLine("Done! Time: " + stopwatch.ElapsedMilliseconds);
             //printDictionary(tempResults);
             return reversedOrderList(tempResults);
         }
@@ -116,6 +128,9 @@ namespace MP1.controller
         public List<String> colorDiffHistogram(String imgPath)
         {
             Console.WriteLine("doing cdh..");
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             double threshold = 10;
             ColorDifferenceHistogram cdh = new ColorDifferenceHistogram();
             Dictionary<String, double> tempResults = new Dictionary<string, double>();
@@ -132,6 +147,8 @@ namespace MP1.controller
             }
 
             //printDictionary(tempResults);
+            stopwatch.Stop();
+            Console.WriteLine("Done! Time: " + stopwatch.ElapsedMilliseconds);
             return orderedList(tempResults);
             
         }
