@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -24,6 +25,12 @@ namespace MP1.controller
         float threshold = 0.0F;
         float sim = 0;
         float simThreshold = 0.9F;
+        float centering = 0.3F;
+
+        List<float> centeredSim = new List<float>();
+        List<float> nonCenteredSim = new List<float>();
+        //float centeredSim = 0;
+        //float nonCenteredSim = 0;
 
         ComputeHistogram ch = new ComputeHistogram(); // for histogram operations
         List<String> similarImagesPaths = new List<string>();
@@ -35,14 +42,29 @@ namespace MP1.controller
             imagePaths = Directory.GetFiles(dir, "*.jpg", SearchOption.AllDirectories);
         }
 
-        public List<String> returnRelevantImages(Bitmap image)
+        public float returnAveSim()
+        {
+            /*
+            foreach(float f in centeredSim)
+            {
+                Debug.WriteLine("Centered: " + f + " Non-centered: " + nonCenteredSim);
+            }
+            */
+            Debug.WriteLine("Centered: " + centeredSim.Sum() + " Non-centered: " + nonCenteredSim.Sum());
+            float test = centeredSim.Sum() + nonCenteredSim.Sum();
+
+            return 1.0F;
+            //return (centeredSim + nonCenteredSim) / 2;
+        }
+
+        public List<String> returnRelevantImages(Bitmap image, bool center)
         {
             Bitmap img = new Bitmap(image);
-            bool center = true;
-            CenteringRefinement cr = new CenteringRefinement(img);
+            //bool center = true;
+            CenteringRefinement cr = new CenteringRefinement(img, centering);
             imgDimensions = cr.getDimensions(center);
 
-            quantizedHistogram = ch.getCRHistogram(img, center);
+            quantizedHistogram = ch.getCRHistogram(img, center, centering);
 
             foreach (int x in quantizedHistogram.Keys)
             {
@@ -67,11 +89,11 @@ namespace MP1.controller
                 Bitmap currImg = new Bitmap(s);
 
                 // CH with Centering Refinement
-                CenteringRefinement cr2 = new CenteringRefinement(currImg);
-                bool cent = true;
+                CenteringRefinement cr2 = new CenteringRefinement(currImg, centering);
+                //bool cent = false;
 
-                currImgDimensions = cr2.getDimensions(cent);
-                currQuantizedHistogram = ch.getCRHistogram(img, cent);
+                currImgDimensions = cr2.getDimensions(center);
+                currQuantizedHistogram = ch.getCRHistogram(img, center, centering);
 
                 sim = 0;
 
@@ -90,6 +112,12 @@ namespace MP1.controller
                 {
                     similarImagesPaths.Add(s);
                 }
+
+                //Debug.WriteLine(sim);
+                if (center)
+                    centeredSim.Add(sim);
+                else
+                    nonCenteredSim.Add(sim);
             }
 
             return similarImagesPaths;

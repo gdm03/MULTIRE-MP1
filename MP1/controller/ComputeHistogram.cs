@@ -28,9 +28,9 @@ namespace MP1.controller
             return histogram;
         }
 
-        public Dictionary<int, float> getCRHistogram(Bitmap img, bool isCenter)
+        public Dictionary<int, float> getCRHistogram(Bitmap img, bool isCenter, float centering)
         {
-            CenteringRefinement cr = new CenteringRefinement(img);
+            CenteringRefinement cr = new CenteringRefinement(img, centering);
             int imgDimensions = cr.getDimensions(isCenter);
 
             return quantizeColors(convertToLuv(cr.getRgbHistogram(isCenter)), imgDimensions);
@@ -64,7 +64,7 @@ namespace MP1.controller
             Dictionary<Color, float> nonCenterHist = new Dictionary<Color, float>();
             Dictionary<Color, float> centerHist = new Dictionary<Color, float>();
 
-            
+            //Debug.WriteLine(width_disp + " " + height_disp);
             for (int i = 0; i < img.Width; i++)
             {
                 for (int j = 0; j < img.Height; j++)
@@ -81,6 +81,7 @@ namespace MP1.controller
                         {
                             nonCenterHist.Add(pixel, 1);
                         }
+                        
                     }
 
                     else
@@ -95,6 +96,7 @@ namespace MP1.controller
                         {
                             centerHist.Add(pixel, 1);
                         }
+                        //Debug.WriteLine("i: " + i + " j: " + j);
                     }
                 }
             }
@@ -149,10 +151,15 @@ namespace MP1.controller
 
             for (int i = 0; i < 159; i++)
             {
+                //Debug.WriteLine("hist1: " + hist1[i] + " hist2: " + hist2[i] + " :::: " + threshold);
+                //if ((hist1[i] > threshold) && (hist1[i] != 0 || hist2[i] != 0))
                 if (hist1[i] > threshold && hist1[i] != 0 || hist2[i] != 0)
+                {
+                    //Debug.WriteLine(hist1[i] + ": " + threshold + " included");
                     included++;
+                }
             }
-
+            
             for (int i = 0; i < 159; i++)
             {
                 float num = Math.Abs(hist1[i] - hist2[i]); // Numerator
@@ -164,7 +171,8 @@ namespace MP1.controller
                     sim += c;
                 }
             }
-
+            //Debug.WriteLine(sim);
+            //Debug.WriteLine("sim:" + sim + " included:" + included);
             sim /= included;
             return sim;
         }

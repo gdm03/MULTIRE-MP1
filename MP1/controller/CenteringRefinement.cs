@@ -22,10 +22,9 @@ namespace MP1.controller
         int endIndex = 0;
 
         Bitmap img;
-        float centering = 0.5F;
         ImageCenter ic;
 
-        public CenteringRefinement(Bitmap img)
+        public CenteringRefinement(Bitmap img, float centering)
         {
             this.img = img;  
             ic = new ImageCenter(img, centering);

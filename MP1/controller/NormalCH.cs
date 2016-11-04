@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace MP1.controller
         int imgDimensions = 0;
         int currImgDimensions = 0;
 
-        float threshold = 0.0F;
+        float threshold = 0.15F;
         float sim = 0;
         float simThreshold = 0.2F;
 
@@ -79,6 +80,7 @@ namespace MP1.controller
                 }
 
                 sim = ch.computeSimilarity(hist1, hist2, threshold);
+                //Debug.WriteLine(sim + " " + simThreshold);
                 if (sim > simThreshold)
                 {
                     similarImagesPaths.Add(s);

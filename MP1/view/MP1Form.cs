@@ -43,8 +43,8 @@ namespace MP1
             OpenFileDialog ofd = new OpenFileDialog();
 
             // Change directory here
-            String dir = @"C:\Users\retxh\Desktop\MP1\images";
-            //String dir = @"D:\DLSU-M\Term 1 AY 2016-2017\CSC741M\MP1_files\MP1\images";
+            //String dir = @"C:\Users\retxh\Desktop\MP1\images";
+            String dir = @"D:\DLSU-M\Term 1 AY 2016-2017\CSC741M\MP1_files\MP1\images";
             String[] imagePaths = Directory.GetFiles(dir, "*.jpg", SearchOption.AllDirectories);
             if (ofd.ShowDialog() == DialogResult.OK)
             {
@@ -111,7 +111,8 @@ namespace MP1
             if (selectedImageBox.Image != null)
             {
                 Bitmap img = new Bitmap(selectedImageBox.Image);
-                displayImages(cch.returnRelevantImages(img));
+                displayImages(cch.returnRelevantImages(img, true));
+                //Debug.WriteLine(cch.returnAveSim());
             }
                 
         }
