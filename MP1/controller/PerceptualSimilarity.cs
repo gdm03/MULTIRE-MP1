@@ -34,9 +34,7 @@ namespace MP1.controller
 
                 float nhIi;
                 hist2.TryGetValue(nhQ.Key, out nhIi);
-                //Console.WriteLine("nhqi: " + nhQ.Value + ", nhIi: " + nhIi);
                 simExactCol = 1.0 - Math.Abs(nhQ.Value - nhIi) / Math.Max(nhQ.Value, nhIi);
-                //Console.WriteLine("simexactcol: " + simExactCol);
                 // get simPerCol
                 foreach (KeyValuePair<int, float> nhI in hist1)
                 {
@@ -47,7 +45,6 @@ namespace MP1.controller
                         simPerCol += val * similarityMatrix[nhQ.Key, nhI.Key];
                     }
                 }
-                Console.WriteLine("simpercol: " + simPerCol);
 
                 double simCol = simExactCol * (1 + simPerCol);
                 double simColor = simCol * nhQ.Value;

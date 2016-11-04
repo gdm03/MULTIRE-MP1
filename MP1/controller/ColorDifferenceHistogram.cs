@@ -35,11 +35,17 @@ namespace MP1.controller
             int D = 1;
 
             finalizeHistogram(ref colors, ref ori, ref labMatrix, out hist, wid, hei, cnum, onum, D);
+
+            //normalize
+            for(int i = 0; i < 108; i++)
+            {
+                hist[i] /= 108;
+            }
             return hist;
 
         }
 
-        public double getSimilarity(double[] hist1, double[] hist2)
+        public double getDistance(double[] hist1, double[] hist2)
         {
             double M = 108;
             double distance = 0.0;
@@ -56,10 +62,11 @@ namespace MP1.controller
                 {
                     uQ += hist2[j] / M;
                 }
-
-                double val = Math.Abs(hist1[i] - hist2[i]) / Math.Abs(hist1[i] + uT) + Math.Abs(hist2[i] + uQ);
+                
+                double val = Math.Abs(hist1[i] - hist2[i]) / (Math.Abs(hist1[i] + uT) + Math.Abs(hist2[i] + uQ));
                 distance += val;
             }
+            //Console.WriteLine("distance: " + distance);
             return distance;
         }
         private LABClass[,] convertToLab(Bitmap img)

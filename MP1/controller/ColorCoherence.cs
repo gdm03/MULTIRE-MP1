@@ -23,7 +23,7 @@ namespace MP1.controller
 
         }
 
-        public double getSimilarity(Dictionary<int, CoherenceUnit> hist1, Dictionary<int, CoherenceUnit> hist2)
+        public double getDistance(Dictionary<int, CoherenceUnit> hist1, Dictionary<int, CoherenceUnit> hist2)
         {
             double distance = 0.0;
             foreach (KeyValuePair<int, CoherenceUnit> k in hist1)
@@ -151,7 +151,16 @@ namespace MP1.controller
                     }
                 }
             }
-            return ccv;
+
+            //normalize
+            Dictionary<int, CoherenceUnit> ccvNorm = new Dictionary<int, CoherenceUnit>();
+            int dim = width * height;
+            foreach(KeyValuePair<int,CoherenceUnit> k in ccv)
+            {
+                CoherenceUnit c = new CoherenceUnit(ccv[k.Key].aCoherentValue / dim, ccv[k.Key].bIncoherentValue / dim);
+                ccvNorm[k.Key] = c;
+            }
+            return ccvNorm;
         }
 
         private void checkNeighbors(LUVClass[,] luvMatrix, int luvIndex, int x, int y)

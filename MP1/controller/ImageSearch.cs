@@ -61,10 +61,10 @@ namespace MP1.controller
             foreach(String path in fileEntries)
             {
                 Dictionary<int, CoherenceUnit> dHistogram = ccv.getColorCoherenceHistogram(new Bitmap(path));
-                double similarity = ccv.getSimilarity(queryHistogram, dHistogram);
-                if (similarity > threshold)
+                double distance = ccv.getDistance(queryHistogram, dHistogram);
+                if (distance > threshold)
                 {
-                    tempResults[path] = similarity;
+                    tempResults[path] = distance;
                 }
 
             }
@@ -74,21 +74,34 @@ namespace MP1.controller
 
         public ArrayList perceptualSim(String imgPath)
         {
-            double threshold = 0.2;
+            double threshold = 1;
             Dictionary<String, double> tempResults = new Dictionary<string, double>();
             PerceptualSimilarity ps = new PerceptualSimilarity();
 
+            Bitmap img = new Bitmap(imgPath);
             ComputeHistogram ch = new ComputeHistogram();
-            Dictionary<LUVClass, float> luv = ch.convertToLuv(ch.getRGBValues(new Bitmap(imgPath)));
+            Dictionary<LUVClass, float> luv = ch.convertToLuv(ch.getRGBValues(img));
             Dictionary<int, float> queryHistogram = ch.quantizeColors(luv, 0);
 
             Console.WriteLine("checking matches...");
             foreach(String path in fileEntries)
             {
-                Dictionary<LUVClass, float> luv2 = ch.convertToLuv(ch.getRGBValues(new Bitmap(path)));
-                Dictionary<int, float> dHistogram = ch.quantizeColors(luv, 0);
+                Bitmap dImg = new Bitmap(path);
+                Dictionary<LUVClass, float> luv2 = ch.convertToLuv(ch.getRGBValues(dImg));
+                Dictionary<int, float> dHistogram = ch.quantizeColors(luv2, 0);
+
+                Dictionary<int, float> qHist = new Dictionary<int, float>();
+                Dictionary<int, float> dHist = new Dictionary<int, float>();
+
+                //normalize
+                foreach (KeyValuePair<int, float> k in queryHistogram)
+                    qHist[k.Key] = queryHistogram[k.Key] / img.Width * img.Height;
+
+                foreach (KeyValuePair<int, float> k in dHistogram)
+                    dHist[k.Key] = dHistogram[k.Key] / dImg.Width * dImg.Height;
+
                 double similarity = ps.getSimilarity(queryHistogram, dHistogram);
-                Console.WriteLine("percep sim: " + similarity);
+                //Console.WriteLine("percep sim: " + similarity);
                 if(similarity > threshold)
                 {
                     tempResults[path] = similarity;
@@ -101,7 +114,7 @@ namespace MP1.controller
 
         public ArrayList colorDiffHistogram(String imgPath)
         {
-            double threshold = 0.2;
+            double threshold = 10;
             ColorDifferenceHistogram cdh = new ColorDifferenceHistogram();
             Dictionary<String, double> tempResults = new Dictionary<string, double>();
 
@@ -109,10 +122,10 @@ namespace MP1.controller
             foreach (String path in fileEntries)
             {
                 double[] dHistogram = cdh.createHistogram(new Bitmap(path));
-                double similarity = cdh.getSimilarity(queryHistogram, dHistogram);
-                if(similarity > threshold)
+                double distance = cdh.getDistance(queryHistogram, dHistogram);
+                if(distance < threshold)
                 {
-                    tempResults[path] = similarity;
+                    tempResults[path] = distance;
                 }
             }
 
@@ -142,10 +155,10 @@ namespace MP1.controller
         }
         private void printDictionary(Dictionary<String, double> dict)
         {
-            //foreach (KeyValuePair<String, double> k in dict)
-            //{
-             //   Console.WriteLine("path: " + k.Key + ", similarity: " + k.Value);
-            //}
+            foreach (KeyValuePair<String, double> k in dict)
+            {
+                Console.WriteLine("path: " + k.Key + ", similarity: " + k.Value);
+            }
         }
     }
 }
