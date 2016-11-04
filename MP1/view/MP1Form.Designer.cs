@@ -36,10 +36,10 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.selectedImageBox = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.chbutton = new System.Windows.Forms.Button();
+            this.perceptualbutton = new System.Windows.Forms.Button();
+            this.colorcoherencebutton = new System.Windows.Forms.Button();
+            this.chcenterbutton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.selectedImageBox)).BeginInit();
             this.SuspendLayout();
@@ -112,52 +112,53 @@
             this.panel1.TabIndex = 3;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
-            // button1
+            // chbutton
             // 
-            this.button1.Location = new System.Drawing.Point(24, 163);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(203, 37);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "Color Histogram";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.chbutton.Location = new System.Drawing.Point(24, 163);
+            this.chbutton.Name = "chbutton";
+            this.chbutton.Size = new System.Drawing.Size(203, 37);
+            this.chbutton.TabIndex = 4;
+            this.chbutton.Text = "Color Histogram";
+            this.chbutton.UseVisualStyleBackColor = true;
+            this.chbutton.Click += new System.EventHandler(this.button1_Click);
             // 
-            // button2
+            // perceptualbutton
             // 
-            this.button2.Location = new System.Drawing.Point(24, 206);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(203, 42);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "CH with Perceptual Similarity";
-            this.button2.UseVisualStyleBackColor = true;
+            this.perceptualbutton.Location = new System.Drawing.Point(24, 206);
+            this.perceptualbutton.Name = "perceptualbutton";
+            this.perceptualbutton.Size = new System.Drawing.Size(203, 42);
+            this.perceptualbutton.TabIndex = 5;
+            this.perceptualbutton.Text = "CH with Perceptual Similarity";
+            this.perceptualbutton.UseVisualStyleBackColor = true;
             // 
-            // button3
+            // colorcoherencebutton
             // 
-            this.button3.Location = new System.Drawing.Point(24, 254);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(203, 45);
-            this.button3.TabIndex = 6;
-            this.button3.Text = "Histogram Refinement with Color Coherence";
-            this.button3.UseVisualStyleBackColor = true;
+            this.colorcoherencebutton.Location = new System.Drawing.Point(24, 254);
+            this.colorcoherencebutton.Name = "colorcoherencebutton";
+            this.colorcoherencebutton.Size = new System.Drawing.Size(203, 45);
+            this.colorcoherencebutton.TabIndex = 6;
+            this.colorcoherencebutton.Text = "Histogram Refinement with Color Coherence";
+            this.colorcoherencebutton.UseVisualStyleBackColor = true;
             // 
-            // button4
+            // chcenterbutton
             // 
-            this.button4.Location = new System.Drawing.Point(24, 305);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(203, 39);
-            this.button4.TabIndex = 7;
-            this.button4.Text = "CH with Centering Refinement";
-            this.button4.UseVisualStyleBackColor = true;
+            this.chcenterbutton.Location = new System.Drawing.Point(24, 305);
+            this.chcenterbutton.Name = "chcenterbutton";
+            this.chcenterbutton.Size = new System.Drawing.Size(203, 39);
+            this.chcenterbutton.TabIndex = 7;
+            this.chcenterbutton.Text = "CH with Centering Refinement";
+            this.chcenterbutton.UseVisualStyleBackColor = true;
+            this.chcenterbutton.Click += new System.EventHandler(this.chcenterbutton_Click);
             // 
             // MP1Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(502, 408);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.chcenterbutton);
+            this.Controls.Add(this.colorcoherencebutton);
+            this.Controls.Add(this.perceptualbutton);
+            this.Controls.Add(this.chbutton);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.selectedImageBox);
             this.Controls.Add(this.menuStrip1);
@@ -182,10 +183,10 @@
         private System.Windows.Forms.PictureBox selectedImageBox;
         private System.Windows.Forms.ToolStripMenuItem colorHistogramToolStripMenuItem;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button chbutton;
+        private System.Windows.Forms.Button perceptualbutton;
+        private System.Windows.Forms.Button colorcoherencebutton;
+        private System.Windows.Forms.Button chcenterbutton;
     }
 }
 

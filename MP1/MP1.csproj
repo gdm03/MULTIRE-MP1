@@ -51,10 +51,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="controller\CenteringRefinement.cs" />
+    <Compile Include="controller\CenteringCH.cs" />
     <Compile Include="controller\ColorCoherence.cs" />
     <Compile Include="controller\ColorDifferenceHistogram.cs" />
     <Compile Include="controller\ComputeHistogram.cs" />
     <Compile Include="controller\ImageSearch.cs" />
+    <Compile Include="controller\NormalCH.cs" />
     <Compile Include="controller\PerceptualSimilarity.cs" />
     <Compile Include="controller\Quantize.cs" />
     <Compile Include="model\LUVClass.cs" />
