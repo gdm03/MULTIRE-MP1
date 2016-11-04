@@ -148,6 +148,7 @@
             this.chcenterbutton.TabIndex = 7;
             this.chcenterbutton.Text = "CH with Centering Refinement";
             this.chcenterbutton.UseVisualStyleBackColor = true;
+            this.chcenterbutton.Click += new System.EventHandler(this.chcenterbutton_Click);
             // 
             // MP1Form
             // 
